@@ -1,1 +1,10 @@
 /venv/
+/hometask5/utils/__pycache__/
+/hometask5/utils/image_toner/__pycache__/
+/hometask5/utils/processor/__pycache__/
+/hometask5/utils/reader/__pycache__/
+/hometask5/utils/writer/__pycache__/
+/hometask6/first/__pycache__/
+/hometask6/second/__pycache__/
+/hometask7/first/__pycache__/
+/hometask7/second/__pycache__/
