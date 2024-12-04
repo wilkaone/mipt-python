@@ -2,6 +2,7 @@
 Шаблонный метод (Template method)
 """
 import cv2
+import numpy as np
 
 class ObjectAnalysis(object):
     def template_method(self, image):
@@ -47,10 +48,7 @@ class BinaryImage(ObjectAnalysis):
         return median
 
     def segmentation(self, image):
-        output = cv2.connectedComponentsWithStats(
-            image,
-            4, # connectivity
-            cv2.CV_32S)
+        output = cv2.connectedComponentsWithStats(image, 4, cv2.CV_32S)
         return (image, output)
 
 class MonochromeImage(BinaryImage):
@@ -58,17 +56,35 @@ class MonochromeImage(BinaryImage):
         pass
 
     def noise_filtering(self, image):
-        return None
+        return cv2.GaussianBlur(image, (5, 5), 0)
 
     def segmentation(self, image):
-        return None
+        edges = cv2.Canny(image, 100, 200)
+        output = cv2.connectedComponentsWithStats(edges, 4, cv2.CV_32S)
+        return (edges, output)
 
 class ColorImage(MonochromeImage):
     def __init__(self):
         pass
 
     def segmentation(self, image):
-        return None
+        gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+        _, binary = cv2.threshold(gray, 127, 255, cv2.THRESH_BINARY)
+
+        dist_transform = cv2.distanceTransform(binary, cv2.DIST_L2, 5)
+        _, sure_fg = cv2.threshold(dist_transform, 0.7 * dist_transform.max(), 255, 0)
+
+        sure_fg = np.uint8(sure_fg)
+        unknown = cv2.subtract(binary, sure_fg)
+        _, markers = cv2.connectedComponents(sure_fg)
+        markers = markers + 1
+        markers[unknown == 255] = 0
+        cv2.watershed(image, markers)
+
+        output = cv2.connectedComponentsWithStats(sure_fg, 4, cv2.CV_32S)
+        return (image, output)
+
+
 
 """
 Декоратор - структурный паттерн
@@ -85,6 +101,7 @@ class FilteredAnalysis(ObjectAnalysis):
         w = []
         h = []
         area = []
+        moments = []
 
         for i in range(len(_area)):
             if _area[i] > 10 and _area[i] < 2500:
@@ -94,18 +111,29 @@ class FilteredAnalysis(ObjectAnalysis):
                 h.append(_h[i])
                 area.append(_area[i])
 
-        return (x,y,w,h,area)
+                mask = np.zeros_like(image, dtype=np.uint8)
+                cv2.rectangle(mask, (x[-1], y[-1]), (x[-1] + w[-1], y[-1] + h[-1]), 255, -1)
+                hu_moments = cv2.HuMoments(cv2.moments(mask)).flatten()
+                moments.append(hu_moments)
+
+        return (x, y, w, h, area, moments)
 
 
 if __name__== '__main__':
     print("Binary Image Processing")
     bin_segm = BinaryImage()
-    (x,y,w,h,area) = bin_segm.template_method(cv2.imread('./data/1.jpg', cv2.IMREAD_GRAYSCALE))
+    (x,y,w,h,area) = bin_segm.template_method(cv2.imread('/home/wilkaone/Projects/mipt-python/hometask8/data/1.jpg', cv2.IMREAD_GRAYSCALE))
     for i in range(len(area)):
             print([x[i], y[i], w[i],h[i],area[i]])
 
     print("Decorated Binary Image Processing")
     filt_bin = FilteredAnalysis(BinaryImage())
-    (x, y, w, h, area) = filt_bin.template_method(cv2.imread('./data/1.jpg', cv2.IMREAD_GRAYSCALE))
+    (x, y, w, h, area, moments) = filt_bin.template_method(cv2.imread('/home/wilkaone/Projects/mipt-python/hometask8/data/1.jpg', cv2.IMREAD_GRAYSCALE))
     for i in range(len(area)):
-            print([x[i], y[i], w[i],h[i],area[i]])
+        print([x[i], y[i], w[i], h[i], area[i], moments[i]])
+
+    print("Color Image Processing")
+    color_segm = ColorImage()
+    (x, y, w, h, area) = color_segm.template_method(cv2.imread('/home/wilkaone/Projects/mipt-python/hometask8/data/1.jpg', cv2.IMREAD_COLOR))
+    for i in range(len(area)):
+        print([x[i], y[i], w[i], h[i], area[i]])
