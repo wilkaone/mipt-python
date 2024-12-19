@@ -12,7 +12,7 @@ class DatasetLoader:
             if os.path.isdir(class_path):
                 images = sorted(
                     [os.path.join(class_path, img) for img in os.listdir(class_path) if img.lower().endswith(('.png', '.jpg', '.jpeg'))],
-                    key=lambda x: int(re.search(r'(\d+)', os.path.basename(x)).group(0))  # Сортировка по числовому значению в имени
+                    key=lambda x: int(re.search(r'(\d+)', os.path.basename(x)).group(0)) 
                 )
                 self.data[class_dir] = images
         return self.data

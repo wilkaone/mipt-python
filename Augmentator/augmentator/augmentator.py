@@ -145,7 +145,6 @@ class Wave2(Augmentation):
             wave_image[:, l] = np.roll(image[:, l], k_shift)
         return wave_image
 
-# Пример использования
 if __name__ == "__main__":
     image = cv2.imread("/home/wilkaone/Projects/Augmentator/augmentator/lena.png", cv2.IMREAD_GRAYSCALE)
     if image is None:

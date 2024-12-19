@@ -64,5 +64,4 @@ class ImageGraphicsView(QGraphicsView):
     def set_image(self, file_path):
         pixmap = QPixmap(file_path)
         self.pixmap_item.setPixmap(QPixmap(file_path))
-        # self.setSceneRect(pixmap.rect().toRectF())
         self.resetTransform()

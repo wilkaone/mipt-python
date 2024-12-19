@@ -66,11 +66,10 @@ class HandlerEvents(QObject):
 
     def augment_dataset(self, data):
         directory = QFileDialog.getExistingDirectory(self.main_window, "Select Directory for Saving Dataset", "")
-        if not directory:  # Если пользователь отменил выбор
+        if not directory:
             print("No directory selected.")
             return
 
-        # Создаем поток и передаем данные
         thread = threading.Thread(target=self.augment_dataset_thread, args=(data, directory))
         thread.start()
 
@@ -88,7 +87,7 @@ class HandlerEvents(QObject):
                     image = cv2.imread(image_path, cv2.IMREAD_GRAYSCALE)
                     for index in range(self.ui.spinbox_count_aug.value()):
                         augmentator = Augmentator(image)
-                        # Применяем различные операции
+
                         self.apply_noise(augmentator)
                         self.apply_denoising(augmentator)
                         self.apply_color_correction(augmentator)
