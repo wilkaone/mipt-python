@@ -1,4 +1,4 @@
-from Hist import HistCSV
+from Hist import HistCSV, HistXLSX
 
 class HistEncoder:
     def __init__(self, strategy):
@@ -14,8 +14,13 @@ class HistEncoder:
         return self.strategy.read(file_path)
 
 if __name__ == "__main__":
+    # histogram = {0: 10, 1: 15, 2: 5, 3: 20}
+    # encoder = HistEncoder(HistCSV())
+    # encoder.encode("/home/wilkaone/Projects/mipt-python/hometask8/encoders/test.csv", histogram)
+    # histogram_decoded = encoder.decode("/home/wilkaone/Projects/mipt-python/hometask8/encoders/test.csv")
+    # print(histogram_decoded)
     histogram = {0: 10, 1: 15, 2: 5, 3: 20}
-    encoder = HistEncoder(HistCSV())
-    encoder.encode("/home/wilkaone/Projects/mipt-python/hometask8/encoders/test.csv", histogram)
-    histogram_decoded = encoder.decode("/home/wilkaone/Projects/mipt-python/hometask8/encoders/test.csv")
+    encoder = HistEncoder(HistXLSX())
+    encoder.encode("/home/wilkaone/Projects/mipt-python/hometask8/encoders/test.xlsx", histogram)
+    histogram_decoded = encoder.decode("/home/wilkaone/Projects/mipt-python/hometask8/encoders/test.xlsx")
     print(histogram_decoded)

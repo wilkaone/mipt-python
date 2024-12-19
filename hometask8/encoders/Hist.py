@@ -1,4 +1,5 @@
 import csv
+import pandas as pd
 
 class HistStrategy:
     def write(self, file_path, histogram):
@@ -24,3 +25,18 @@ class HistCSV(HistStrategy):
                 histogram[int(row["bin"])] = int(row["count"])
         print(f"Histogram read from {file_path} (CSV)")
         return histogram
+    
+class HistXLSX(HistStrategy):
+    def write(self, file_path, histogram):
+        data = {"bin": list(histogram.keys()), "count": list(histogram.values())}
+        df = pd.DataFrame(data)
+        df.to_excel(file_path, index=False)
+        print(f"Histogram write to {file_path} (XLSX)")
+
+    def read(self, file_path):
+        df = pd.read_excel(file_path)
+        histogram = dict(zip(df["bin"], df["count"]))
+        print(f"Histogram read from {file_path} (XLSX)")
+        return histogram
+    
+
