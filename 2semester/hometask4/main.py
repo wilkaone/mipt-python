@@ -53,7 +53,9 @@ def main():
         mc_points=20,
         alpha=0.1
     )
-    manager_mc = OptimizationManager(optimizer_mc, log_file="results_montecarlo.log", gen_folder="/home/wilkaone/Projects/mipt-python_backup/2semester/hometask4/Gen")
+    manager_mc = OptimizationManager(optimizer_mc, 
+                                     log_file="/home/wilkaone/Projects/mipt-python_backup/2semester/hometask4/results_montecarlo.log", 
+                                     gen_folder="/home/wilkaone/Projects/mipt-python_backup/2semester/hometask4/Gen")
     best_x_mc, best_f_mc = manager_mc.run()
     print(f"[MonteCarlo+Grad] Best: x={best_x_mc}, f={best_f_mc}")
 
@@ -63,7 +65,9 @@ def main():
         bounds=bounds,
         max_iterations=40
     )
-    manager_peano = OptimizationManager(optimizer_peano, log_file="results_peano.log", gen_folder="/home/wilkaone/Projects/mipt-python_backup/2semester/hometask4/Gen")
+    manager_peano = OptimizationManager(optimizer_peano, 
+                                        log_file="/home/wilkaone/Projects/mipt-python_backup/2semester/hometask4/results_peano.log", 
+                                        gen_folder="/home/wilkaone/Projects/mipt-python_backup/2semester/hometask4/Gen")
     best_x_peano, best_f_peano = manager_peano.run()
     print(f"[PeanoGlobal] Best: x={best_x_peano}, f={best_f_peano}")
 
@@ -74,7 +78,9 @@ def main():
         max_iterations=2000,
         steps_per_dim=5
     )
-    manager_grid = OptimizationManager(optimizer_grid, log_file="results_grid.log", gen_folder="/home/wilkaone/Projects/mipt-python_backup/2semester/hometask4/Gen")
+    manager_grid = OptimizationManager(optimizer_grid, 
+                                       log_file="/home/wilkaone/Projects/mipt-python_backup/2semester/hometask4/results_grid.log", 
+                                       gen_folder="/home/wilkaone/Projects/mipt-python_backup/2semester/hometask4/Gen")
     best_x_grid, best_f_grid = manager_grid.run()
     print(f"[GridSearch] Best: x={best_x_grid}, f={best_f_grid}")
 
